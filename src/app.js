@@ -13,4 +13,11 @@ app.use(cookieParser()); // to perform CRUD operation using cookiePraser
 
 // (error, req, res, next)
 
+//routes import
+import userRouter from "./routes/user.routes.js";
+
+// routes declarartion
+app.use("/api/v1/users", userRouter);
+
+
 export { app };
