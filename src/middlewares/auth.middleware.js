@@ -4,7 +4,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 
 // export const verifyJWT = asyncHandler(async (req, res, next) => {
-export const verifyJWT = asyncHandler(async (req, _, next) => {  // if res is not used 
+export const verifyJWT = asyncHandler(async (req, _, next) => {  // if res is not used then we use _
   try {
     const token =
       req.cookies?.accessToken ||
