@@ -14,7 +14,7 @@ const generateAccessAndRefreshTokens = async (userId) => {
     const accessToken = user.generateAccessToken();
     const refreshToken = user.generateRefreshToken();
 
-    user.refreshToken = refreshToken;
+    user.refreshToken = refreshToken; // add in the 'user' object  --> save in the database (refreshToken)
     await user.save({ validateBeforeSave: false });
 
     return { accessToken, refreshToken };
@@ -184,6 +184,7 @@ const loginUser = asyncHandler(async (req, res) => {
     user._id
   );
 
+  // the reference of refreshToken is undefined or empty (access of RT is empty)
   const loggedInUser = await User.findById(user._id).select(
     "-password -refreshToken"
   );
@@ -201,8 +202,10 @@ const loginUser = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(
         200,
+        // data field (data) -> ApiResponse
         {
           user: loggedInUser,
+          // why we send again separately -> accessToken & refreshToken -> Because in this user want to set in their localStorage from their side for mobile application where cookie is not set (these are the case for that we send these again)
           accessToken,
           refreshToken,
         },
