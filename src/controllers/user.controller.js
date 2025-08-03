@@ -65,9 +65,12 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(409, "User with email or username already exists");
   }
 
+  // ---> If we add middleware in the routes then it gives some extra functionality like is we use the multer then it gives more functionality like ---> req.files to access file related things.
+  // ---> adds more field in the req (due to middleware)
+
   // console.log(req.files.avatar[0])
   // check for images, check for avatar
-  const avatarLocalPath = req.files?.avatar?.[0]?.path;
+  const avatarLocalPath = req.files?.avatar?.[0]?.path; // local-path because it is now in the server not goes in the cloudinary
 
   // const coverImageLocalPath = req.files?.coverImage?.[0]?.path;
 
@@ -138,7 +141,7 @@ const registerUser = asyncHandler(async (req, res) => {
   // return response
   return res
     .status(201)
-    .json(new ApiResponse(200, createdUser, "User registered Successfully"));
+    .json(new ApiResponse(200, createdUser, "User registered Successfully")); // ApiResponse is a class so we use new keyword to make its object.
 });
 
 const loginUser = asyncHandler(async (req, res) => {
@@ -177,8 +180,9 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(401, "Invalid User credentials");
   }
 
-  const { accessToken, refreshToken } =
-    await generateAccessAndRefreshTokens(user._id);
+  const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
+    user._id
+  );
 
   const loggedInUser = await User.findById(user._id).select(
     "-password -refreshToken"
@@ -524,9 +528,6 @@ const getWatchHistory = asyncHandler(async (req, res) => {
       )
     );
 });
-
-
-
 
 export {
   registerUser,
