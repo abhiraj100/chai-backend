@@ -161,8 +161,10 @@ const loginUser = asyncHandler(async (req, res) => {
   // }
 
   // Here is an alternative of above code based on logic discussion
-  if (!(username || email)) {
-    throw new ApiError(400, "username or email is required");
+  // if (!(username || email)) {
+  if (!(username && email)) {
+    // throw new ApiError(400, "username or email is required");
+    throw new ApiError(400, "username and email is required");
   }
 
   const user = await User.findOne({
@@ -314,12 +316,14 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "Password changed Successfully"));
 });
 
+// get current user
 const getCurrentUser = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(200, req.user, "current user fetched successfully"));
 });
 
+// Update Account Details  -> Advice (if you want to update file then keep another controllers)
 const updateAccountDetails = asyncHandler(async (req, res) => {
   const { fullName, email } = req.body;
 
@@ -335,14 +339,15 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
         email: email,
       },
     },
-    { new: true }
+    { new: true }  // the changes are update then it will return
   ).select("-password");
 
   return res
     .status(200)
-    .json(new ApiResponse(200, user, "Account details updates successfully"));
+    .json(new ApiResponse(200, user, "Account details updated successfully"));
 });
 
+// File Update
 const updateUserAvatar = asyncHandler(async (req, res) => {
   const avatarLocalPath = req.file?.path;
 
